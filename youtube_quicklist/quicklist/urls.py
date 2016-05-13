@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     #url(r'^$', views.index, name='index'),
-    url(r'^(?P<query>[\w\+]+)$', views.index, name='query'),
+    url(r'^$', views.index, name=''),
 ]
