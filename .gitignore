@@ -1,6 +1,6 @@
 local_settings.py
 
-venv/
+env_yq/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
