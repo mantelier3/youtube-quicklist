@@ -1,6 +1,6 @@
 local_settings.py
 
-env_yq/
+db.sqlite3 # local database
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
