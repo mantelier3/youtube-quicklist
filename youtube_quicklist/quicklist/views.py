@@ -17,6 +17,9 @@ def index(request):
     #return HttpResponse(playlist)
     return render(request, 'quicklist/index.html', context)
 
+def play_next(request):
+    pass
+
 def add(request):
     rs = request.session
     video_id = int(request.GET.get("video_id"))
