@@ -1,23 +1,37 @@
-<form method="GET" action="" >
+<!DOCTYPE HTML>
+<html>
+<p>{{ request.session.playlist.1 }}</p>
+<p>Session id is: {{ session_id }} </p>
+<p>playlist is: {{ playlist|join:", " }}</p>
+<a href="clear_playlist"><p>clear playlist</p></a>
+<body>
+<form method="GET" action="index">
 	<input type="text" name="query"></input>
 	<input type="submit"></button>
 </form>
-{% if cond %}
-<div>
-    {{ query }}
-</div>
-{% endif %}
 <div>
     <div style="float: left; margin: 50px">
-        {% for result in results %}
+        <form method="GET" action="add">
+            {% for result in results %}
+                <div>
+                    <img src="{{ result.thumbnail_url }}"></img>
+                    <br />
+                    <button type="submit" name ="video_id"
+                            value="{{ forloop.counter }}">Add</button>
+                </div>
+            {% endfor %}
+        </form>
+    </div>
+    <div id="player" style="float: left; margin: 50px"></div>
+    <div style="margin: 50px; width: 300px>; float:left">
+        <p>asdfqueueasdf    </p>
+        {% for item in request.session.playlist %}
             <div>
-                <img src="{{ result.url }}"></img>
+                <img src="{{ item.thumbnail_url }}"></img>
             </div>
         {% endfor %}
     </div>
-    <div id="player"></div>
 </div>
-
 <script>
     // 2. This code loads the IFrame Player API code asynchronously.
     var tag = document.createElement('script');
@@ -31,9 +45,9 @@
     var player;
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: '{{ videoId }}',
+            height: '200', // 390
+            width: '320', // 640
+            videoId: '{{ request.session.playlist.1 }}',
             events: {
             //'onReady': onPlayerReady,
             //'onStateChange': onPlayerStateChange
@@ -60,3 +74,5 @@
         player.stopVideo();
     }
 </script>
+</body>
+</html>
