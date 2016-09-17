@@ -1,6 +1,6 @@
 local_settings.py
 
-db.sqlite3 # local database
+youtube_quicklist/db.sqlite3 # local database
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
