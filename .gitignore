@@ -1,6 +1,10 @@
 local_settings.py
 
-youtube_quicklist/db.sqlite3
+# local database
+/youtube_quicklist/db.sqlite3
+
+# django debug toolbar
+/youtube_quicklist/youtube_quicklist/quicklist/static/debug_toolbar/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
