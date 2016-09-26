@@ -1,33 +1,30 @@
 <!DOCTYPE HTML>
 <html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quicklist/style.css' %}" type="text/css"/>
+    <script src="{% static 'quicklist/jquery-3.1.1.js' %}"></script>
+    <script src="{% static 'quicklist/main.js' %}"></script>
+</head>
 <p>playlist is: {{ playlist|join:", " }}</p>
-<a href="clear_playlist"><p>clear playlist</p></a>
+<button type="button" id="clickable_button">Click</button>
+<p id="test_p">asdf test is now {{ request.session.asdf }}</p>
+<a href="clear_playlist">clear playlist</a><span>&nbsp;&nbsp;</span>
+<a href="clear_session">clear session</a><br /><br />
 <body>
-<form method="GET" action="index">
-	<input type="text" name="query"></input>
-	<input type="submit"></button>
+<form id="form_search" method="GET" action="index">
+	<input id="text_query" type="text" name="query" value="clio goes two wheel"></input>
+	<input id="btn_search" type="submit"></input>
 </form>
-<div>
-    <div style="float: left; margin: 50px">
-        <form method="GET" action="add">
-            {% for result in request.session.results %}
-                <div>
-                    <img src="{{ result.thumbnail_url }}"></img>
-                    <br />
-                    <button type="submit" name ="video_id"
-                            value="{{ forloop.counter|add:'-1' }}">Add</button>
-                </div>
-            {% endfor %}
-        </form>
+<div id="main_div">
+    <div id="div_results_container">
+        {% include "quicklist/search_results.html" %}
     </div>
-    <div id="player" style="float: left; margin: 50px"></div>
-    <div style="margin: 50px; width: 300px>; float:left">
-        <p>asdfqueueasdf    </p>
-        {% for item in request.session.playlist %}
-            <div>
-                <img src="{{ item.thumbnail_url }}"></img>
-            </div>
-        {% endfor %}
+    <div id="player"></div>
+    <div id="div_playlist_container">
+        <form id="form_playlist" method="GET" action="remove">
+            {% include "quicklist/playlist.html" %}
+        </form>
     </div>
 </div>
 <script>
@@ -48,7 +45,7 @@
                 width: '320', // 640
                 videoId: '{{ current_video_id }}',
                 events: {
-                'onReady': onPlayerReady,
+                //'onReady': onPlayerReady,
                 'onStateChange': onPlayerStateChange
                 }
             });
