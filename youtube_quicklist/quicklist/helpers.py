@@ -7,9 +7,9 @@ def search_videos(query):
         maxResults=5).execute()
     # video_id = response["items"][0]["id"]["video_id"]
 
-    results = [ { "video_id":item["id"]["videoId"], 
-                  "thumbnail_url":item["snippet"]["thumbnails"]["default"]["url"] } 
-                      for item in response["items"] ]
+    results = [{ "video_id":item["id"]["videoId"], 
+                 "thumbnail_url":item["snippet"]["thumbnails"]["default"] \
+                ["url"] } for item in response["items"] ]
     return results
 
 def get_or_create_playlist(request):
