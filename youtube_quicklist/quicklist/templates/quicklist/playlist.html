@@ -1,4 +1,6 @@
-{% for item in request.session.playlist %}
+
+{% for item in playlist %}
+{{ item }}
     <div>
         <img src="{{ item.thumbnail_url }}"></img><br />
         <button type="submit" name="remove_video_index" 

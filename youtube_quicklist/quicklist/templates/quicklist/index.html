@@ -13,12 +13,14 @@
 <a href="clear_session">clear session</a><br /><br />
 <body>
 <form id="form_search" method="GET" action="index">
-	<input id="text_query" type="text" name="query" value="clio goes two wheel"></input>
-	<input id="btn_search" type="submit"></input>
+    <input id="text_query" type="text" name="query" value="clio goes two wheel"></input>
+    <input id="btn_search" type="submit"></input>
 </form>
 <div id="main_div">
     <div id="div_results_container">
-        {% include "quicklist/search_results.html" %}
+        <form id="form_add" method="GET" action="add">
+            {% include "quicklist/search_results.html" %}
+        </form>
     </div>
     <div id="player"></div>
     <div id="div_playlist_container">
@@ -28,44 +30,49 @@
     </div>
 </div>
 <script>
-    {% if playlist_exists %}
-        // 2. This code loads the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
+    //2. This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+    console.log("asdf")
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    //$("div#player").append(tag);
 
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // 3. This function creates an <iframe> (and YouTube player)
-        //    after the API code downloads.
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '200', // 390
-                width: '320', // 640
-                videoId: '{{ current_video_id }}',
-                events: {
-                //'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        // 4. The API will call this function when the video player is ready.
-        function onPlayerReady(event) {
-            event.target.playVideo();
-        }
-
-        // 5. The API calls this function when the player's state changes.
-        var done = false;
-        function onPlayerStateChange(event) {
-            if (event.data == 0) {
-                window.location.href = "next_video"
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '200', // 390
+            width: '320', // 640
+            videoId: "{{ current_video_id }}",
+            events: {
+            //'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
             }
+        });
+    }
+
+    // 4. The API will call this function when the video player is ready.
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    var done = false;
+    function onPlayerStateChange(event) {
+        if (event.data == 0) {
+            window.location.href = "next_video"
         }
-        function stopVideo() {
-            player.stopVideo();
-        }
+    }
+    function stopVideo() {
+        player.stopVideo();
+    }
+
+    // window.onload = function () {
+    //     display_video_player();
+    // };
+    {% if playlist_exists %}
     {% endif %}
 </script>
 </body>

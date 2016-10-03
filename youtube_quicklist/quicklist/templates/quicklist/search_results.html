@@ -1,11 +1,9 @@
-<form id="form_add" method="GET" action="add">
-    {% for result in request.session.results %}
-        <div class="div_results" id="div_result_{{ forloop.counter|add:'-1' }}">
-            <img src="{{ result.thumbnail_url }}"></img>
-            <br />
-            <button class="btn_add" id="btn_add_{{ forloop.counter|add:'-1' }}" 
-                    type="submit" name ="video_index"
-                    value="{{ forloop.counter|add:'-1' }}">Add</button>
-        </div>
-    {% endfor %}
-</form>
+{% for result in request.session.results %}
+    <div class="div_results" id="div_result_{{ forloop.counter|add:'-1' }}">
+        <img src="{{ result.thumbnail_url }}"></img>
+        <br />
+        <button class="btn_add" id="btn_add_{{ forloop.counter|add:'-1' }}" 
+                type="submit" name ="video_indexa"
+                value="{{ forloop.counter|add:'-1' }}">Add</button>
+    </div>
+{% endfor %}
