@@ -22,10 +22,12 @@ def ajax_test(request):
     return HttpResponse(a)
 
 def index(request):
+    request.session["TEST"] = "TRUE"
     query = request.GET.get("query", False)
     if query:
         results = search_videos(query)
         request.session["results"] = results
+        request.session.save()
         if request.is_ajax():
             if request.GET["need_html_results"] == "true":
                 results = render_to_string("quicklist/search_results.html", 
@@ -53,14 +55,18 @@ def play_next(request):
     pass
 
 def add(request):
-    rs = request.session
     add_video_index = int(request.GET["add_video_index"])
     playlist = get_or_create_playlist(request)
-    rs['playlist'].append(rs["results"][add_video_index])
+    new_video = request.session["results"][add_video_index]
+    playlist.append(new_video)
+    request.session['playlist'] = playlist
+    print("session playlist", request.session["playlist"])
+    request.session.save()
     rendered_playlist = render_to_string("quicklist/playlist.html", 
-                                     context=None, request=request)
+                                         context= {"playlist": [new_video]},
+                                         request=request)
+    # return HttpResponse("hello")
     return HttpResponse(json.dumps(rendered_playlist))
-    # return redirect(reverse("index"))
 
 def next_video(request):
     request.session["current_video_index"] += 1
