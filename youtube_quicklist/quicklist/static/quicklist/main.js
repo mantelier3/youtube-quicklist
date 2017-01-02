@@ -20,18 +20,8 @@ $(document).ready(function () {
 
 
 
-
-
-
     //move js from template to here
     //fix positioning when there is no video
-
-
-
-
-
-
-
 
 
 
@@ -62,6 +52,11 @@ $(document).ready(function () {
         });
     });
 
+    $("#btn_next").click( function(){
+        play_next_video();
+    })
+
+
     ajax_form_add_video();
     mark_buttons_as_clicked_when_clicked();
     // console.log("foo")
@@ -70,6 +65,20 @@ $(document).ready(function () {
     // Add - add video to playlist
 
 });
+
+
+
+// ajax for changing video
+function play_next_video() {
+    $.ajax({
+        url: "/quicklist/next_video",
+        data: {},
+        success: function (results) {
+            new_video_id = JSON.parse(results);
+            player.loadVideoById(new_video_id);
+        }
+    });
+};
 
 function ajax_form_add_video() {
     $("#form_add").on("submit", function (event) {
