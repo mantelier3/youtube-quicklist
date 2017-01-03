@@ -1,2 +1,2 @@
 # youtube-quicklist
-A website to make a quick and editable youtube playlist
+A web application to make quick and editable youtube playlists
