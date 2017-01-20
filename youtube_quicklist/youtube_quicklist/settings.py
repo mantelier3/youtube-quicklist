@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 
 try:
-    from .local_settings import API_KEY
+    from .local_settings import API_KEY, SECRET_KEY
 except ImportError:
     pass  # No local_settings file
 
@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y3ka$tks-xbws&!in$=nt8rfk^quhdvf*y)c7_=^0&=ttp0j%7'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'django_extensions',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -59,12 +60,12 @@ MIDDLEWARE_CLASSES = [
 ]
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
-DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False,}
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False}
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True
 }
 
-INTERLAL_IPS = ['127.0.0.1',]
+INTERLAL_IPS = ['127.0.0.1']
 
 ROOT_URLCONF = 'youtube_quicklist.urls'
 
@@ -133,7 +134,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-PROJECT_DIR=os.path.dirname(__file__)
-STATIC_ROOT= os.path.join(PROJECT_DIR,'quicklist/static/')
+PROJECT_DIR = os.path.dirname(__file__)
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'quicklist/static/')
 STATIC_URL = '/static/'
-
