@@ -4,11 +4,12 @@ from django.conf import settings
 
 
 urlpatterns = [
-    #url(r'^$', views.index, name='index'),
+    # url(r'^$', views.index, name='index'),
     url(r'^$', views.index, name='index'),
     url(r'^index$', views.index, name=''),
-    url(r'^add$', views.add, name=''),
-    url(r'^remove$', views.remove, name=''),
+    url(r'^add/(?P<position>-?\d)/(?P<result_index>\d+)$',
+        views.add, name=''),
+    url(r'^remove/(?P<position>-?\d)$', views.remove, name=''),
     url(r'^asdf$', views.asdf, name=''),
     url(r'^clear_playlist$', views.clear_playlist, name=''),
     url(r'^clear_session$', views.clear_session, name=''),
@@ -18,5 +19,4 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
+        url(r'^__debug__/', include(debug_toolbar.urls))]
