@@ -13,17 +13,6 @@ import json
 #     return HttpResponse("foo")
 
 
-def ajax_test(request):
-    pass
-    if "asdf" not in request.session:
-        request.session["asdf"] = 1
-    else:
-        request.session["asdf"] += 2
-    test_data = {'a': 'aaa', 'b': 'bbb', 'c': 'ccc'}
-    a = json.dumps(test_data)
-    return HttpResponse(a)
-
-
 def index(request):
     request.session["TEST"] = "TRUE"
     query = request.GET.get("query", False)
@@ -48,28 +37,44 @@ def index(request):
         current_video_id = playlist[request.session[
             "current_video_index"]]["video_id"]
     request.session["playlist"] = playlist
-    context = {'playlist': playlist, 'current_video_id': current_video_id,
-               'playlist_exists': playlist_exists}
+    context = {'playlist': playlist,
+               'current_video_id': current_video_id,
+               'playlist_exists': playlist_exists,
+               'start_number': 0}
     return render(request, 'quicklist/index.html', context)
 
 
-def play_next(request):
-    pass
-
-
-def add(request):
-    add_video_index = int(request.GET["add_video_index"])
+def add(request, position, result_index):
+    print("foobar1234 {} {}".format(position, result_index))
     playlist = get_or_create_playlist(request)
-    new_video = request.session["results"][add_video_index]
+    new_video = request.session["results"][int(result_index)]
     playlist.append(new_video)
     request.session['playlist'] = playlist
     print("session playlist", request.session["playlist"])
     request.session.save()
-    rendered_playlist = render_to_string("quicklist/playlist.html",
-                                         context={"playlist": [new_video]},
-                                         request=request)
+    rendered_item = render_to_string("quicklist/playlist.html",
+                                     context={"playlist": [new_video],
+                                              "start_number": position},
+                                     request=request)
     # return HttpResponse("hello")
-    return HttpResponse(json.dumps(rendered_playlist))
+    # return HttpResponse("aaaaaaaaaaaaaaaaaaa")
+    return HttpResponse(json.dumps({"rendered_item": rendered_item,
+                                    "position": position}))
+
+
+def remove(request, position):
+    playlist = get_or_create_playlist(request)
+    print("PLAYLIST IS A")
+    print(playlist)
+    # video_index_remove = int(request.GET["video_index_remove"])
+    print("video_index_remove is", position)
+    del playlist[int(position)]
+    request.session['playlist'] = playlist
+    request.session.save()
+    # rendered_playlist = render_to_string("quicklist/playlist.html",
+    #                                      context={"playlist": playlist},
+    #                                      request=request)
+    return HttpResponse(position)
 
 
 def next_video(request):
@@ -93,12 +98,14 @@ def next_video(request):
     # return redirect(reverse("index"))
 
 
-def remove(request):
-    playlist = get_or_create_playlist(request)
-    item_for_removal = int(request.GET["remove_video_index"])
-    del playlist[item_for_removal]
-    request.session['playlist'] = playlist
-    # request.session['playlist'] = playlist # clear playlist
+def clear_playlist(request):
+    del request.session["playlist"]
+    return redirect(reverse("index"))
+
+
+def clear_session(request):
+    for key in list(request.session.keys()):
+        del request.session[key]
     return redirect(reverse("index"))
 
 
@@ -111,12 +118,16 @@ def asdf(request):
         return HttpResponse('No count in session. Setting to 1')
 
 
-def clear_playlist(request):
-    del request.session["playlist"]
-    return redirect(reverse("index"))
+def ajax_test(request):
+    pass
+    if "asdf" not in request.session:
+        request.session["asdf"] = 1
+    else:
+        request.session["asdf"] += 2
+    test_data = {'a': 'aaa', 'b': 'bbb', 'c': 'ccc'}
+    a = json.dumps(test_data)
+    return HttpResponse(a)
 
 
-def clear_session(request):
-    for key in list(request.session.keys()):
-        del request.session[key]
-    return redirect(reverse("index"))
+def play_next(request):
+    pass
