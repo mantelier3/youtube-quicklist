@@ -1,7 +1,7 @@
 local_settings.py
 
 # local database
-/youtube_quicklist/db.sqlite3
+db.sqlite3
 
 # django debug toolbar
 /youtube_quicklist/youtube_quicklist/quicklist/static/debug_toolbar/
