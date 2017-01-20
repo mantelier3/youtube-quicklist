@@ -83,7 +83,6 @@ $(document).ready(function () {
                 js_results = JSON.parse(results).results;
                 if (need_html_results) {
                     $("#form_add").append(js_results);
-                    mark_buttons_as_clicked_when_clicked();
                 } else {
                     thumbnail_urls = js_results.map(function (js_results) {
                         return js_results.thumbnail_url;
