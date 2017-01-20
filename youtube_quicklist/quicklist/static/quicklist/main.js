@@ -1,22 +1,66 @@
-a = 5;
-//$("#clickable_button").click(function () {
-//    $("#clickable_button").text = "foobar"
-//});
-/*$(document).ready (function () {
-    $("button#clickable_button").click(function () {
-        $("#clickable_button").text("foo")
-    });
-});*/
-$(document).ready(function () {
-    $("#clickable_button").click(function () {
+// sets callback for removing a video from playlist
+function set_btn_remove_callback(button_list) {
+    console.log("removecb "+button_list);
+    button_list.on("click", function (event) {
+        console.log("clicked btn-remove number "+event.target.value);
+        my_event = event;
+        event.preventDefault();
+        // console.log("button is " + event.target.id);
         $.ajax({
-            url: "/quicklist/index",
-            success: function (result) {
-                alert(result);
-                my_results = result;
+            url: "/quicklist/remove/"+event.target.value,
+            // data: {video_index_remove: event.target.value},
+            success: function (position) {
+                $(event.target).parent().remove();
+                $(".btn_remove").each(function(index) {
+                    if(index >= position){
+                        console.log($(this));
+                        $(this).attr("id",$(this).attr("id").replace(/.$/, function(x) {return x-1})); 
+                        $(this).attr("value", $(this).val() - 1); 
+                    }
+                });
+                // postrihaj indexe v html in django
+            }
+        });
+    }); 
+}
+var results1;
+// var new_playlist_item;
+function set_btn_add_callback(button_list) {
+    console.log("addcb "+button_list);
+    button_list.on("click", function (event) {
+        console.log("clicked btn-add number "+event.target.value)
+        event.preventDefault();
+        my_event = event; 
+        $.ajax({
+            // to position X add video Y from search results, -1 means at end
+            url: "/quicklist/add/"+$(".btn_remove").length+"/"+event.target.value,
+            // data: {video_index_add: event.target.value},
+            success: function (results) {
+                parsed_json = JSON.parse(results);
+                rendered_item = parsed_json.rendered_item;
+                position = parsed_json.position;
+                results1=results;
+                // console.log(results)
+                // new_playlist_item = $(js_playlist)
+                // console.log("new_playlist_item" + new_playlist_item)
+                // console.log("!asdf");
+                // console.log(asdf);
+                $("#form_playlist").append(rendered_item);
+                // set_btn_remove_callback(new_playlist_item.children("button"));
+                set_btn_remove_callback($("#btn_remove_"+position));
+                console.log("inner callback")
+                // asdf.attr("id","foobar222");
             }
         });
     });
+}
+
+$(document).ready(function () {
+    
+    set_btn_remove_callback($(".btn_remove"));
+    set_btn_add_callback($(".btn_add"));
+
+
 
 
 
@@ -25,7 +69,7 @@ $(document).ready(function () {
 
 
 
-    // Search - query youtbe for search results and display new results
+    // Search - query youtube for search results and display new results
     $("#form_search").on("submit", function (event) {
         event.preventDefault();
         my_event = event;
@@ -52,13 +96,19 @@ $(document).ready(function () {
         });
     });
 
-    $("#btn_next").click( function(){
-        play_next_video();
-    })
+    // plays next video in playlist
+    $("#btn_next").click( function() {
+        $.ajax({
+            url: "/quicklist/next_video",
+            data: {},
+            success: function (results) {
+                new_video_id = JSON.parse(results);
+                player.loadVideoById(new_video_id);
+            }
+        });
+    });
 
 
-    ajax_form_add_video();
-    mark_buttons_as_clicked_when_clicked();
     // console.log("foo")
     // display_video_player();
     // console.log("bar")
@@ -68,49 +118,12 @@ $(document).ready(function () {
 
 
 
-// ajax for changing video
-function play_next_video() {
-    $.ajax({
-        url: "/quicklist/next_video",
-        data: {},
-        success: function (results) {
-            new_video_id = JSON.parse(results);
-            player.loadVideoById(new_video_id);
-        }
-    });
-};
 
-function ajax_form_add_video() {
-    $("#form_add").on("submit", function (event) {
-        console.log("form add submit ajax")
-        event.preventDefault();
-        my_event = event;
-        add_video_index = $(".btn_add").map( function (i, el) { 
-            if ($(el).data("clicked")) { return i } 
-        });
-        console.log(add_video_index);
-        if (add_video_index.length != 1) {
-            alert("error, more or less than one button clicked, but not one")
-        }
-        $(".btn_add").data("clicked", false);
-        console.log("foobar1234")   
-        $.ajax({
-            url: "/quicklist/add",
-            data: {add_video_index: add_video_index[0]},
-            success: function (results) {
-                js_playlist = JSON.parse(results);
-                $("#form_playlist").append(js_playlist);
-
-            }
-        });
-    });
-}
-
-function mark_buttons_as_clicked_when_clicked() {
-    $(".btn_add").click(function () {
-        $(this).data("clicked", true);
-    });
-}
+// function mark_buttons_as_clicked_when_clicked() {
+//     $(".btn_add").click(function () {
+//         $(this).data("clicked", true);
+//     });
+// }
 
 // function display_video_player(){
 //     //2. This code loads the IFrame Player API code asynchronously.
